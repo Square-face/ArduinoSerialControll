@@ -1,0 +1,23 @@
+[{
+        "origin": "master",
+        "type": "analogWrite",
+        "pin": 1,
+        "value": 45
+    },
+    {
+        "origin": "master",
+        "type": "digitalWrite",
+        "pin": 5,
+        "value": true
+    },
+    {
+        "origin": "master",
+        "type": "analogRead",
+        "pin": 13
+    },
+    {
+        "origin": "master",
+        "type": "digitalRead",
+        "pin": 6
+    }
+]

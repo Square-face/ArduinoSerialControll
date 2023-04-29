@@ -1,0 +1,6 @@
+[{
+    "origin": "master",
+    "type": "digitalWrite",
+    "pin": 4,
+    "value": true
+}]

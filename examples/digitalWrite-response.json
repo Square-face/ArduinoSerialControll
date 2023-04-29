@@ -1,0 +1,13 @@
+[{
+    "origin": "arduino",
+    "type": "digitalWrite",
+    "pin": 4,
+    "previous": {
+        "type": "digital",
+        "value": false
+    },
+    "now": {
+        "type": "digital",
+        "value": true
+    }
+}]

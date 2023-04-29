@@ -1,0 +1,6 @@
+[{
+    "origin": "master",
+    "type": "analogWrite",
+    "pin": 4,
+    "value": 127
+}]

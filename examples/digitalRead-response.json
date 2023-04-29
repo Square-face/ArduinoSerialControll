@@ -1,0 +1,6 @@
+[{
+    "origin": "arduino",
+    "type": "digitalRead",
+    "pin": 5,
+    "value": false
+}]

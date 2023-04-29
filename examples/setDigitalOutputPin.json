@@ -1,0 +1,6 @@
+[{
+    "origin": "master",
+    "type": "setDigitalOut",
+    "pin": 4,
+    "value": false
+}]
