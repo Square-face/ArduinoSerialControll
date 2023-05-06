@@ -1,2 +1,0 @@
-port: "/dev/cu.usbmodem101"
-baudrate: 9600

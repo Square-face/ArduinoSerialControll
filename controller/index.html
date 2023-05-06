@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Controller</title>
+</head>
+
+<body>
+    <button id="btn">hello</button>
+    <div class="fields">
+        <div class="motors">
+            <div class="motor">
+                <span class="name">Motor 1</span>
+                <input class="slider" type="range" min="-255" max="255" value="0" id="motor1">
+                <span class="value"></span>
+            </div>
+            <div class="motor">
+                <span class="name">Motor 2</span>
+                <input class="slider" type="range" min="-255" max="255" value="0" id="motor2">
+                <span class="value"></span>
+            </div>
+        </div>
+        <div class="steppers">
+            <div class="stepper">
+                <span class="name">Stepper 1</span>
+                <input class="slider" type="range" min="-2000" max="2000" value="0" id="stepper1">
+                <span class="value"></span>
+            </div>
+        </div>
+        <div class="servos">
+            <div class="servo">
+                <span class="name">Servo 1</span>
+                <input class="slider" type="range" min="0" max="180" value="0" id="servo1">
+                <span class="value"></span>
+            </div>
+            <div class="servo">
+                <span class="name">Servo 2</span>
+                <input class="slider" type="range" min="0" max="180" value="0" id="servo2">
+                <span class="value"></span>
+            </div>
+            <div class="servo">
+                <span class="name">Servo 3</span>
+                <input class="slider" type="range" min="0" max="180" value="0" id="servo3">
+                <span class="value"></span>
+            </div>
+            <div class="servo">
+                <span class="name">Servo 4</span>
+                <input class="slider" type="range" min="0" max="180" value="0" id="servo4">
+                <span class="value"></span>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="main.js"></script>
+</body>
+
+</html>

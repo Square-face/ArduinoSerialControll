@@ -1,15 +1,13 @@
 #include <ArduinoJson.h>
+#include "ResponsePresets.h"
 
 // recomended to set to the maximum analog pin
 // A15 for arduino mega
-const int MAX_PINS = A15;
 
-DynamicJsonDocument commandsBuffer(1024);
-DynamicJsonDocument commandBuffer(256);
-DynamicJsonDocument responseBuffer(512);
+DynamicJsonDocument commandBuffer(512);
 
 enum Type {setPin, digWrite, digRead, anWrite, anRead};
-enum Mode {output, input};
+
 
 /**A array holding all the pin states.
  * 
@@ -21,7 +19,6 @@ enum Mode {output, input};
 Mode pins[MAX_PINS];
 
 Type mapType(String type) {
-  Serial.println(type);
   if (type == "setPin")       return setPin;
   if (type == "digitalWrite") return digWrite;
   if (type == "digitalRead")  return digRead;
@@ -39,26 +36,25 @@ String getType(Type type) {
   }
 }
 
-String check_pin(JsonObject response, int pin, Mode mode) {
+String check_pin(String response, int pin, Mode mode) {
   if (pins[pin] != mode) {
     return incorrect_pin_mode(response, pin, pins[pin]);
   }
+  return "";
 }
 
 String runCommand(JsonVariant command) {
-  Serial.println("Running command");
   const char* origin = command["origin"];
   const char* typestring = command["type"];
   Type type = mapType(typestring);
   int pin = command["pin"];;
   bool digvalue;
   int anvalue;
-  String result = "";
   String check;
 
   // standard response
-  JsonObject response = responseBuffer.to<JsonObject>();
-  response["origin"] = "arduino";
+  String response = "{";
+  response += addString("origin", "arduino");
 
   switch(type) {
     case setPin:
@@ -68,12 +64,12 @@ String runCommand(JsonVariant command) {
       pins[pin] = digvalue ? output : input;
 
       // generate response
-      response["type"] = getType(type);
-      response["pin"] = pin;
-      response["value"] = digvalue;
+      response += addString("type", getType(type));
+      response += addInt("pin", pin);
+      response += addBool("value", digvalue, false);
+      response += "}";
 
-      serializeJson(response, result);
-      return result;
+      return response;
 
     case digWrite:
       // make sure pin is initialized and in the right mode
@@ -85,12 +81,12 @@ String runCommand(JsonVariant command) {
       digitalWrite(pin, digvalue);
 
       // generate response
-      response["type"] = getType(type);
-      response["pin"] = pin;
-      response["value"] = digvalue;
+      response += addString("type", getType(type));
+      response += addInt("pin", pin);
+      response += addBool("value", digvalue, false);
+      response += "}";
 
-      serializeJson(response, result);
-      return result;
+      return response;
 
     case digRead:
 
@@ -100,12 +96,12 @@ String runCommand(JsonVariant command) {
       digvalue = digitalRead(pin);
 
       // generate response
-      response["type"] = getType(type);
-      response["pin"] = pin;
-      response["value"] = digvalue;
-      
-      serializeJson(response, result);
-      return result;
+      response += addString("type", getType(type));
+      response += addInt("pin", pin);
+      response += addBool("value", digvalue, false);
+      response += "}";
+
+      return response;
 
     case anWrite:
       // make sure pin is initialized and in the right mode
@@ -117,12 +113,12 @@ String runCommand(JsonVariant command) {
       analogWrite(pin, anvalue);
 
       // generate response
-      response["type"] = getType(type);
-      response["pin"] = pin;
-      response["value"] = anvalue;
+      response += addString("type", getType(type));
+      response += addInt("pin", pin);
+      response += addInt("value", anvalue, false);
+      response += "}";
 
-      serializeJson(response, result);
-      return result;
+      return response;
 
     case anRead:
 
@@ -132,12 +128,12 @@ String runCommand(JsonVariant command) {
       anvalue = analogRead(pin);
 
       // generate response
-      response["type"] = getType(type);
-      response["pin"] = pin;
-      response["value"] = anvalue;
-      
-      serializeJson(response, result);
-      return result;
+      response += addString("type", getType(type));
+      response += addInt("pin", pin);
+      response += addInt("value", anvalue, false);
+      response += "}";
+
+      return response;
 
     default:
       return "{}";
@@ -145,37 +141,40 @@ String runCommand(JsonVariant command) {
 }
 
 void parseCommands() {
-  String input = Serial.readString();
-  input.trim();
-  Serial.println(input);
-  deserializeJson(commandsBuffer, input);
-  JsonArray commands = commandsBuffer.as<JsonArray>();
-  Serial.println("number of commands:" + String(commands.size()));
+  String result = "[";
 
-  if (commands.size() == 0) {return;}
+  while(Serial.available()) {
 
-  String responses[commands.size()];
+    String input = Serial.readStringUntil("}");
+    input.trim();
+    if (input.startsWith("[")) { input.remove(0); }
+    if (input == "]") {
+      if (result.endsWith(",")) {
+        result.remove(result.length());
+      }
+      break;
+    }
+    deserializeJson(commandBuffer, input);
+    JsonObject command = commandBuffer.as<JsonObject>();
 
-  for (int i = 0; i < commands.size(); i++) {
-    JsonVariant command = commands[i];
-
-    responses[i] = runCommand(command);
+    String response = runCommand(command);
+    
+    result += response;
+    result += ",";
   }
-
-  for (int i=0; i < commands.size(); i++) {
-    Serial.print(responses[i]);
-  }
-  Serial.println();
+  result.
+  result += "]";
+  Serial.println(result);
 }
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(19200);
+  Serial.begin(57600);
   for (int i = 0; i <= MAX_PINS; i++ ){
     pinMode(i, OUTPUT);
     pins[i] = output;
   }
-
+  Serial.println("Hello, World!");
 }
 
 void loop() {
@@ -183,5 +182,5 @@ void loop() {
   while (Serial.available() == 0) {}
 
   // get json representation
-  parseCommands();
+  parseValues();
 }
