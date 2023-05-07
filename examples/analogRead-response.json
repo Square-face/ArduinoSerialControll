@@ -1,5 +1,0 @@
-[{
-    "type": "analogRead",
-    "pin": 5,
-    "value": 200
-}]
