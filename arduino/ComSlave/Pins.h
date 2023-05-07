@@ -11,6 +11,7 @@ struct Stepper {
   int direction;
   int step;
   int enable;
+  bool enabled;
   int targetPos;
   int currentPos;
 };
@@ -34,7 +35,7 @@ Motor motors[MOTOR_COUNT] = {
 };
 
 Stepper steppers[STEPPER_COUNT] = {
-  {4, 5, 12, 0, 0}
+  {4, 5, 12, false, 0, 0}
 };
 
 Servo servo1;
@@ -84,7 +85,7 @@ void setStepperPins() {
     pinMode(stepper.step, OUTPUT);
     pinMode(stepper.enable, OUTPUT);
 
-    digitalWrite(stepper.enable, LOW);
+    digitalWrite(stepper.enable, HIGH);
 
     Serial.print("Done! (");
     Serial.print(stepper.direction);

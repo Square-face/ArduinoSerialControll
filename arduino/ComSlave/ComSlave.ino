@@ -40,15 +40,18 @@ void parseStepperValues(String pos) {
     // get the index of the next ,
     // the , indicates the next stepper to get the target pos for
     int targetPosIndex = pos.indexOf(",");
+    bool enabled = (pos.charAt(0) == "E");
+    int targetPos = pos.substring(1, targetPosIndex+1).toInt();
 
     // if the index is -1, there are no more comas and the last value will be stored
     if (targetPosIndex == -1) {
-      steppers[i].targetPos = pos.toInt();
+      steppers[i].enabled = enabled
+      steppers[i].targetPos = pos.substring(1, pos.length()-1);
       continue;
     }
 
     // save the target position
-    int targetPos = pos.substring(0, targetPosIndex+1).toInt();
+    steppers[i].enabled = enabled;
     steppers[i].targetPos = targetPos;
 
     // cut it from the string
