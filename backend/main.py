@@ -4,11 +4,15 @@ import State
 import asyncio
 from websockets.server import serve
 
-arduino = serial.Serial(port='/dev/cu.usbserial-0001', baudrate=57600)
+arduino = serial.Serial()
+arduino.baudrate = 57600
+arduino.port = '/dev/cu.usbserial-0001'
 state = State.State(2, 1, 4)
+
 
 async def handler(websocket):
     print("connected")
+    await websocket.send(json.dumps({"baud": arduino.baudrate, "port": arduino.port, "open":  arduino.is_open, "state": state.generate()}))
     async for message in websocket:
         print(message)
         data = json.loads(message)

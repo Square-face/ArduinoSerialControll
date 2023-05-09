@@ -14,12 +14,13 @@ struct ServoStruct {
 
 
 // config servos
+// {pin, dpi, targetPos, currentPos, enabled}
 #define SERVO_COUNT 4 // the number of servos
 ServoStruct servos[SERVO_COUNT] = {
-  {13,  0.0001, 0, 0.0, false}, // shoulder
-  {11,  0.0001, 0, 0.0, false}, // elbow
-  {10,  0.01,   0, 0.0, false}, // wrist
-  {9,   0.1,    0, 0.0, false}  // claw
+  {13,  0.01, 0, 0.0, false}, // shoulder
+  {11,  0.1, 0, 0.0, false}, // elbow
+  {10,  0.1, 0, 0.0, false}, // wrist
+  {9,   0.1, 0, 0.0, false}  // claw
 };
 
 
@@ -54,7 +55,7 @@ void parseServo() {
     servos[i].targetPos = targetPos;
 
     // cut it from the string
-    values.remove(0, endIndex);
+    values.remove(0, endIndex+1);
   };
 }
 
@@ -78,19 +79,23 @@ void updateServo(int index) {
   ServoStruct servo = servos[index];
 
   // detach or attach servo
-  if (!servo.enabled) {detach(index);}
-  else {attach(index);}
+  if (!servo.enabled) {
+    detach(index);
+    servo.currentPos = servo.targetPos;
+  } else {attach(index);}
 
   // increase or decrease the current position
   if (servo.currentPos > servo.targetPos) {
+    Serial.println(servo.currentPos);
     // to avoid an undershoot, pick the biggest value if the current position is more than the target position
     servo.currentPos = max(servo.currentPos-servo.dpi, servo.targetPos);
   } else if (servo.currentPos < servo.targetPos) {
+    Serial.println(servo.currentPos);
     // to avoid an overshoot, pick the lowest value if the current position is less than the target position
     servo.currentPos = min(servo.currentPos+servo.dpi, servo.targetPos);
   }
 
   // update position
-  servoControllers[index].write(round(servo.currentPos));
+  servoControllers[index].write(servo.currentPos);
   servos[index].currentPos = servo.currentPos;
 }

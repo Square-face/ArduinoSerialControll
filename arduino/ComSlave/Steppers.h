@@ -12,13 +12,14 @@ struct Stepper {
   int targetPos;    // the current target position
   float currentPos; // the current position
   int actualPos;    // the number of steps traveled relative to start pos
-  int dpi;          // the amount of movement for each loop cycle, high = more
+  float dpi;          // the amount of movement for each loop cycle, high = more
 };
 
 
+// {direction, step, enable, enabled, targetPos, currentPos, actualPos, dpi}
 #define STEPPER_COUNT 1
 Stepper steppers[STEPPER_COUNT] = {
-  {4, 5, 12, false, 0, 0.0, 0} // arm
+  {4, 5, 12, false, 0, 0.0, 1.0} // arm
 };
 
 

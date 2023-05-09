@@ -1,14 +1,25 @@
 class motor():
     def __init__(self):
         self.speed = 0
+    
+    def stringify(self):
+        return f"{self.speed}"
 
 class stepper():
     def __init__(self):
+        self.enabled = False
         self.position = 0
+    
+    def stringify(self):
+        return f"{self.enabled if 'E' else 'D'}{self.position}"
 
 class servo():
     def __init__(self):
+        self.enabled = False
         self.position = 0
+    
+    def stringify(self):
+        return f"{self.enabled if 'E' else 'D'}{self.position}"
 
 
 
@@ -24,8 +35,8 @@ class State:
     
     def generate(self):
 
-        motorSpeeds = [str(motor.speed) for motor in self.motors]
-        stepperPositions = [str(stepper.position) for stepper in self.steppers]
-        servoPositions = [str(servo.position) for servo in self.servos]
+        motorSpeeds       = [motor.stringify()      for motor   in self.motors  ]
+        stepperPositions  = [stepper.stringify()    for stepper in self.steppers]
+        servoPositions    = [servo.stringify()      for servo   in self.servos  ]
 
-        return f"Motor[{','.join(motorSpeeds)}]Stepper[{','.join(stepperPositions)}]Servo[{','.join(servoPositions)}]"
+        return f"Motors[{','.join(motorSpeeds)}]Steppers[{','.join(stepperPositions)}]Servos[{','.join(servoPositions)}]"
