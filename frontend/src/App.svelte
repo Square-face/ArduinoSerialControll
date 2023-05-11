@@ -8,6 +8,7 @@
   import Stepper from './lib/Indicators/Stepper.svelte';
   import Driving from './lib/Controlls/Driving.svelte';
   import Gamepad from './lib/Controlls/Gamepad.svelte';
+  import Keybinds from './lib/Controlls/Keybinds.svelte';
 </script>
 
 <main class="serial-controll">
@@ -20,6 +21,7 @@
   <div class="controlls">
     <Driving/>
     <Gamepad/>
+    <Keybinds/>
   </div>
 
   <div class="visualization">

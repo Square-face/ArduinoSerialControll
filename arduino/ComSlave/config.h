@@ -10,7 +10,7 @@ const char enableString = 'E';
 
 enum Controller {MOTOR, SERVO, STEPPER};
 Controller getCon(String id){
-  if (id == "Motor")    { return MOTOR;   }
-  if (id == "Servo")    { return SERVO;   }
-  if (id == "Srepper")  { return STEPPER; }
+  if (id == "Motors")    { return MOTOR;   }
+  if (id == "Servos")    { return SERVO;   }
+  if (id == "Steppers")  { return STEPPER; }
 }

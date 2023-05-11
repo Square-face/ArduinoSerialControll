@@ -17,6 +17,7 @@ void setup() {
 void loop() {
   if (Serial.available()) {
     Serial.println("Processing...");
+    delay(1);
     parseValues();
     Serial.println("Done");
   }
@@ -25,11 +26,14 @@ void loop() {
 
 
 void parseValues(){
+  Serial.println("getting values");
   Controller id;
   while (Serial.available()) {
-    Serial.println("getting field name");
-    id = getCon(Serial.readStringUntil(valueStart));
-    Serial.println("getted field name");
+    String text = Serial.readStringUntil(valueStart);
+    id = getCon(text);
+    Serial.print(text);
+    Serial.print(" : ");
+    Serial.println(id);
 
     switch (id) {
       case MOTOR:

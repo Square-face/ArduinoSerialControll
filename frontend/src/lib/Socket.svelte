@@ -1,13 +1,47 @@
 <script lang="ts">
 
-    import { state } from './stores'
+    import { state, ports, serial } from './stores'
+    import Switch from './Components/Switch.svelte';
 
-    var host = "localhost"
-    var port = 8765
-    var socket = new WebSocket(`ws://${host}:${port}/`)
+    let host = "localhost"
+    let port = 8765
+    let refreshrate = 10
+    let autorefresh = false
+    let timer: NodeJS.Timer;
+    let socket = new WebSocket(`ws://${host}:${port}/`)
+    let data = {};
 
-    var connected = false
-    var statusMessage = "Connecting..."
+    let connected = false
+    let statusMessage = "Connecting..."
+
+    state.subscribe(state => {data = state})
+    serial.subscribe(data => {
+        if (!data.waiting) {return}
+        if (!connected) {return}
+
+        let cmd = {
+            type: data.open ? "open" : "close",
+            baud: data.baud,
+            port: data.port,
+        }
+        socket.send(JSON.stringify([cmd]))
+        serial.update(serial => {
+            serial.waiting = false
+            return serial
+        })
+    })
+
+    const refresh = () => {
+        socket.send(JSON.stringify([{type:"setAll", value:data}]))
+    }
+
+    const updateAutoRefresh = () => {
+        console.log(autorefresh)
+        clearInterval(timer)
+        if (autorefresh) {
+            timer = setInterval(refresh, 1000/refreshrate)
+        }
+    }
 
     const websocketSet = () => {
 
@@ -15,12 +49,36 @@
             console.log("opened")
             connected = true
             statusMessage = "Connected"
+            updateAutoRefresh();
+            socket.send(JSON.stringify([{type:"getPorts"},{type:"getSerial"}]))
         }
         
         socket.onclose = () => {
             console.log("closed")
             connected = false
             statusMessage = "Closed"
+        }
+
+        socket.onmessage = event => {
+            console.log(event.data.toString())
+            let data = JSON.parse(event.data.toString())
+
+            switch (data.type) {
+                case "fullState":
+                    let jsonState = data.value
+                    state.set(jsonState)
+                    break
+                case "ports":
+                    ports.set(data.value)
+                    break
+                case "serialState":
+                    serial.update(serial => {
+                        serial.baud = data.baud
+                        serial.port = data.port
+                        serial.open = data.open
+                        return serial
+                    })
+            }
         }
     }
     websocketSet()
@@ -41,11 +99,17 @@
 <div class="fields socket">
     <h2 class="header">Websocket</h2>
     <div class="field" id="adress" data-field-name="Adress">
-        ws://<input type="text" name="host" id="host" bind:value={host}>:<input type="number" name="port" id="port" bind:value={port}>/
+        ws://<input type="text" bind:value={host}>:<input type="number" bind:value={port}>/
     </div>
     <div class="field connection-state" id="websocket-state" data-field-name="Status">{statusMessage}</div>
-    <div class="field" id="websocket-connect-btn" data-field-name="Connect Websocket">
+    <div class="field websocket-btn" id="websocket-connect-btn" data-field-name="Connect Websocket">
         <button on:click={connect}>{connected ? "Disconnect" : "Connect"}</button>
+    </div>
+    <div class="field refreshrate" id="refreshrate" data-field-name="Refresh Rate (HZ)">
+        <input type="number" bind:value={refreshrate} on:change={updateAutoRefresh}>
+    </div>
+    <div class="field autorefresh" id="autorefresh" data-field-name="Auto Refresh">
+        <Switch bind:value={autorefresh} onChange={updateAutoRefresh}/>
     </div>
     
     <div id="output"></div>
@@ -66,6 +130,14 @@
         }
     }
 
+    input[type=number] {
+        width: 100%;
+        border: none;
+        outline: none;
+        padding: 0.1em 0.2em;
+        background-color: rgba(0,0,0,0.2);
+    }
+
     div.socket {
         display: flex;
         flex-direction: column;
@@ -81,7 +153,7 @@
             margin: 0;
         }
         div.field {
-            padding: 1em 0.6em 0.4em;
+            padding: 1.2em 0.6em 0.4em;
             background: rgba(255,255,255,0.1);
             border-radius: 0.2em;
             display: flex;
@@ -96,11 +168,11 @@
                 border-radius: 0.5em 0.5em 0.2em 0.2em;
             }
 
-            &#websocket-state {
+            &#refreshrate {
                 border-radius: 0.2em 0.2em 0.2em 0.5em;
             }
 
-            &#websocket-connect-btn {
+            &#autorefresh {
                 border-radius: 0.2em 0.2em 0.5em 0.2em;
             }
 

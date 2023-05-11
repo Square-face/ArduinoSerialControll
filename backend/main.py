@@ -1,37 +1,55 @@
 import serial, time, json
 import State
+import serial.tools.list_ports
 
 import asyncio
 from websockets.server import serve
 
 arduino = serial.Serial()
 arduino.baudrate = 57600
-arduino.port = '/dev/cu.usbserial-0001'
+arduino.port = '/dev/cu.usbmodem101'
 state = State.State(2, 1, 4)
 
+def getPorts():
+    ports = []
+    for port in serial.tools.list_ports.comports():
+        ports.append(port.name)
+    return ports
 
 async def handler(websocket):
-    print("connected")
-    await websocket.send(json.dumps({"baud": arduino.baudrate, "port": arduino.port, "open":  arduino.is_open, "state": state.generate()}))
+    
     async for message in websocket:
         print(message)
         data = json.loads(message)
         for command in data:
-            if command["type"] == "open":
-                arduino.open()
-            if command["type"] == "close":
-                arduino.close()
-            if command["type"] == "motor":
-                state.motors[command["index"]-1].speed = command["value"]
-            if command["type"] == "stepper":
-                state.steppers[command["index"]-1].position = command["value"]
-            if command["type"] == "servo":
-                print("changing servo")
-                state.servos[command["index"]].position = command["value"]
+            match command["type"]:
+                case "open":
+                    arduino.port = command["port"]
+                    arduino.baudrate = command["baud"]
+                    if not arduino.is_open:
+                        arduino.open()
+                case "close":
+                    if arduino.is_open:
+                        arduino.close()
+                case "getSerial":
+                    await websocket.send(json.dumps({"type":"serialState", "open":arduino.is_open, "port":arduino.port, "baud":arduino.baudrate}))
+                case "getPorts":
+                    data = json.dumps({
+                            'type' :'ports',
+                            'value' : getPorts()
+                        })
+                    await websocket.send(data)
+                case "motor":
+                    state.motors[command["index"]-1].speed = command["value"]
+                case "stepper":
+                    state.steppers[command["index"]-1].position = command["value"]
+                case "servo":
+                    state.servos[command["index"]].position = command["value"]
+                case "setAll":
+                    state.updateAll(command["value"])
         
-        arduino.write(state.generate().encode())
-        print(state.generate())
-        await websocket.send(state.generate())
+        if arduino.is_open:
+            arduino.write(state.generate().encode())
 
 async def main():
     async with serve(handler, "localhost", 8765):

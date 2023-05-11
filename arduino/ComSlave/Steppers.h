@@ -19,7 +19,7 @@ struct Stepper {
 // {direction, step, enable, enabled, targetPos, currentPos, actualPos, dpi}
 #define STEPPER_COUNT 1
 Stepper steppers[STEPPER_COUNT] = {
-  {4, 5, 12, false, 0, 0.0, 1.0} // arm
+  {4, 5, 12, false, 0, 0.0, 0.0, 1.0} // arm
 };
 
 
@@ -47,6 +47,7 @@ void initSteppers() {
 
 void parseStepper() {
   String values = Serial.readStringUntil(valueEnd);
+  Serial.println(values);
   for (int i = 0; i < STEPPER_COUNT; i++) {
     // break if values string is empty
     if (values == "") {break;}
@@ -84,10 +85,18 @@ void updateStepper(int index) {
 
   
   if (stepper.targetPos > stepper.currentPos) {
+    Serial.print("T:C ");
+    Serial.print(stepper.targetPos);
+    Serial.print(" : ");
+    Serial.println(stepper.currentPos);
     // to avoid overshoot if the current position is less than the target one, use the 
     // smallest value between the target posstion and current position plus stepper dpi
     steppers[index].currentPos = min(stepper.currentPos + stepper.dpi, stepper.targetPos);
   } else if (stepper.targetPos < stepper.currentPos) {
+    Serial.print("T:C ");
+    Serial.print(stepper.targetPos);
+    Serial.print(" : ");
+    Serial.println(stepper.currentPos);
     // to avoid undershoot if the current position is more than the target one, use the 
     // largest value between the target posstion and current position minus stepper dpi
     steppers[index].currentPos = max(stepper.currentPos - stepper.dpi, stepper.targetPos);
@@ -95,20 +104,30 @@ void updateStepper(int index) {
 
   // while the actual position is more than the current position, reduce the actual position until it is less than or equal to the current position
   while (stepper.actualPos > roundUp(stepper.currentPos)) {
+    Serial.print("A:C ");
+    Serial.print(stepper.actualPos);
+    Serial.print(" : ");
+    Serial.println(stepper.currentPos);
     digitalWrite(stepper.direction, HIGH);
     digitalWrite(stepper.step, LOW);
     delayMicroseconds(2);
     digitalWrite(stepper.step, HIGH);
+    stepper.actualPos--;
     steppers[index].actualPos--;
     delayMicroseconds(2);
   }
 
   // while the actual position is less than the current position, increase the actual position until it is more than or equal to the current position
   while (stepper.actualPos < roundUp(stepper.currentPos)) {
+    Serial.print("A:C ");
+    Serial.print(stepper.actualPos);
+    Serial.print(" : ");
+    Serial.println(stepper.currentPos);
     digitalWrite(stepper.direction, LOW);
     digitalWrite(stepper.step, LOW);
     delayMicroseconds(2);
     digitalWrite(stepper.step, HIGH);
+    stepper.actualPos++;
     steppers[index].actualPos++;
     delayMicroseconds(2);
   }
