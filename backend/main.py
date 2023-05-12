@@ -52,7 +52,7 @@ async def handler(websocket):
             arduino.write(state.generate().encode())
 
 async def main():
-    async with serve(handler, "localhost", 8765):
+    async with serve(handler, "0.0.0.0", 8765):
         await asyncio.Future()  # run forever
 
 asyncio.run(main())
