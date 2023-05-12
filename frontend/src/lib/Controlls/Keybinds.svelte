@@ -1,27 +1,63 @@
 <script lang="ts">
+  import Servo from "../Indicators/Servo.svelte";
+
 
     import { state, keybinds, type, targetType } from "../stores"
 
-    let configuredKeybinds = []
-    let activeKeybinds = []
 
-    keybinds.addkeybind({
+    keybinds.addAnalogKeybind({
         id: 0,
-        key: "KeyF",
+        axis: 1,
+        gamepad: 0,
+        value: 0,
         targets: [{
-            type: type.Servo,
-            targetType: targetType.position,
-            index: 2,
-            targetValue: 180,
-            toggle: false,
+            type: type.Motor,
+            targetType: targetType.speed,
+            index: 0,
+            absolute: true,
+            inverted: true,
+            inMin: -1,
+            inMax: 1,
+            outMin: -255,
+            outMax: 255,
+        },{
+            type: type.Motor,
+            targetType: targetType.speed,
+            index: 1,
+            absolute: true,
             inverted: false,
+            inMin: -1,
+            inMax: 1,
+            outMin: -255,
+            outMax: 255,
         }]
     })
-
-    // get upp to date keybinds
-    keybinds.subscribe(keybinds => {
-        configuredKeybinds = keybinds.keybinds
-        activeKeybinds = keybinds.activeKeybinds
+    keybinds.addAnalogKeybind({
+        id: 0,
+        axis: 0,
+        gamepad: 0,
+        value: 0,
+        targets: [{
+            type: type.Motor,
+            targetType: targetType.speed,
+            index: 0,
+            absolute: true,
+            inverted: true,
+            inMin: -1,
+            inMax: 1,
+            outMin: -255,
+            outMax: 255,
+        },{
+            type: type.Motor,
+            targetType: targetType.speed,
+            index: 1,
+            absolute: true,
+            inverted: true,
+            inMin: -1,
+            inMax: 1,
+            outMin: -255,
+            outMax: 255,
+        }]
     })
 
     document.addEventListener('keydown', event => {keybinds.pressKey(event.code)})
@@ -31,11 +67,11 @@
 
 <div class="keybinds">
     <h2>Keybinds</h2>
-    {#each configuredKeybinds as keybind}
+    {#each $keybinds.keyboard as keybind}
     <div class="keybind">
         <span class="keybind-id">{keybind.id}</span>
         <span class="keybind-key">{keybind.key}</span>
-        <span> {activeKeybinds.includes(keybind) ? "active" : "passive" } </span>
+        <span> {keybind.value ? "active" : "passive" } </span>
         <div class="keybind-targets">
             <span>Affects</span>
             {#each keybind.targets as target}
