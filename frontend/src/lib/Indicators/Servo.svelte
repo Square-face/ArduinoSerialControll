@@ -19,15 +19,18 @@
     keybinds.subscribe(keybinds => {
         keybindPositions = []
         keybindEnabled = []
-        keybinds.activeKeybinds.forEach((keybind, _, __)=>{
-            if (keybind.type != type.Servo){return}
-            if (keybind.id != index) {return}
-            switch(keybind.targetType) {
-                case (targetType.position):
-                    keybindPositions.push(keybind.value)
-                case (targetType.enabled):
-                    keybindEnabled.push(keybind.value)
-            }
+        keybinds.keyboard.forEach((keybind, _, __)=>{
+            keybind.targets.forEach(target => {
+                // body
+                if (target.type != type.Servo){return}
+                if (target.index != index) {return}
+                switch(target.targetType) {
+                    case (targetType.position):
+                        keybindPositions.push(5)
+                    case (targetType.enabled):
+                        keybindEnabled.push(keybind.value)
+                }
+            });
 
         })
         if (keybindPositions.length > 0){
