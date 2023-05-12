@@ -17,10 +17,10 @@ struct ServoStruct {
 // {pin, dpi, targetPos, currentPos, enabled}
 #define SERVO_COUNT 4 // the number of servos
 ServoStruct servos[SERVO_COUNT] = {
-  {13,  0.1, 0, 0.0, false}, // shoulder
-  {11,  0.1, 0, 0.0, false}, // elbow
-  {10,  1, 0, 0.0, false}, // wrist
-  {9,   0.1, 0, 0.0, false}  // claw
+  {11,  0.05, 0, 0.0, false}, // shoulder
+  {8,  0.1, 0, 0.0, false}, // elbow
+  {7,  0.05, 0, 0.0, false}, // wrist
+  {6,   0.1, 0, 0.0, false}  // claw
 };
 
 

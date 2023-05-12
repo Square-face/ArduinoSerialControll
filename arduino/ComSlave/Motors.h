@@ -7,7 +7,8 @@
 // motor Temaplate
 struct Motor {
   int pwm;          // GPIO pin used for PWM controll
-  int direction;    // GPIO pin used for direction controll
+  int in1;    // GPIO pin used for direction controll
+  int in2;    // GPIO pin used for direction controll
   int targetSpeed;  // requested speed, usualy Zero when initialized
   int currentSpeed; // current speed, should be Zero
 };
@@ -15,8 +16,8 @@ struct Motor {
 // config motors
 #define MOTOR_COUNT 2 // number of motors
 Motor motors[MOTOR_COUNT] = {
-  {A3, A2, 0, 0},
-  {2, 3, 0, 0}
+  {9, A5, A4, 0, 0},
+  {10, A3, A2, 0, 0}
 };
 
 
@@ -27,7 +28,8 @@ void initMotors() {
 
     Motor motor = motors[i];
     pinMode(motor.pwm, OUTPUT);
-    pinMode(motor.direction, OUTPUT);
+    pinMode(motor.in1, OUTPUT);
+    pinMode(motor.in2, OUTPUT);
   }
   Serial.println("Done");
 }
@@ -55,7 +57,7 @@ void parseMotor() {
     motors[i].targetSpeed = targetspeed;
 
     // cut it from the string
-    values.remove(0, endIndex);
+    values.remove(0, endIndex+1);
   };
 }
 
@@ -64,9 +66,11 @@ void updateMotor(int index) {
 
   // set direction pin
   if (motor.targetSpeed < 0) {
-    digitalWrite(motor.direction, HIGH);
+    digitalWrite(motor.in1, HIGH);
+    digitalWrite(motor.in2, LOW);
   } else {
-    digitalWrite(motor.direction, LOW);
+    digitalWrite(motor.in1, LOW);
+    digitalWrite(motor.in2, HIGH);
   }
 
   // set pwm

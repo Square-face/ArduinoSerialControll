@@ -64,13 +64,16 @@ void parseStepper() {
     // get enable and position values
     bool enabled = values.startsWith(String(enableString));
     int targetPos = values.substring(1, endIndex).toInt();
+    Serial.print(enabled);
+    Serial.print(" : ");
+    Serial.println(targetPos);
 
     // save enable and position values
     steppers[i].enabled = enabled;
     steppers[i].targetPos = targetPos;
 
     // cut it from the string
-    values.remove(0, endIndex);
+    values.remove(0, endIndex+1);
   };
 }
 
@@ -110,11 +113,11 @@ void updateStepper(int index) {
     Serial.println(stepper.currentPos);
     digitalWrite(stepper.direction, HIGH);
     digitalWrite(stepper.step, LOW);
-    delayMicroseconds(2);
+    delayMicroseconds(5);
     digitalWrite(stepper.step, HIGH);
     stepper.actualPos--;
     steppers[index].actualPos--;
-    delayMicroseconds(2);
+    delayMicroseconds(5);
   }
 
   // while the actual position is less than the current position, increase the actual position until it is more than or equal to the current position
@@ -125,10 +128,10 @@ void updateStepper(int index) {
     Serial.println(stepper.currentPos);
     digitalWrite(stepper.direction, LOW);
     digitalWrite(stepper.step, LOW);
-    delayMicroseconds(2);
+    delayMicroseconds(5);
     digitalWrite(stepper.step, HIGH);
     stepper.actualPos++;
     steppers[index].actualPos++;
-    delayMicroseconds(2);
+    delayMicroseconds(5);
   }
 }
