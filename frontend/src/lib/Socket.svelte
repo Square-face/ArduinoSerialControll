@@ -1,14 +1,16 @@
 <script lang="ts">
+    /**Manages the WebSocket connection to the backend
+     * 
+     * Relays changes made in the ui to the backend for them to be sent over to the arduino.
+     * 
+    */
 
-    import { state, ports, serial } from './stores'
+    // dependencies
+    import { state, ports, serial, host, port } from './stores'
     import Switch from './Components/Switch.svelte';
 
-    let host = "localhost"
-    let port = 8765
-    let refreshrate = 10
     let autorefresh = false
-    let timer: NodeJS.Timer;
-    let socket = new WebSocket(`ws://${host}:${port}/`)
+    let socket = new WebSocket(`ws://${$host}:${$port}/`)
     let data = {};
 
     let connected = false
@@ -31,25 +33,12 @@
         })
     })
 
-    const refresh = () => {
-        socket.send(JSON.stringify([{type:"setAll", value:data}]))
-    }
-
-    const updateAutoRefresh = () => {
-        console.log(autorefresh)
-        clearInterval(timer)
-        if (autorefresh) {
-            timer = setInterval(refresh, 1000/refreshrate)
-        }
-    }
-
     const websocketSet = () => {
 
         socket.onopen = () => {
             console.log("opened")
             connected = true
             statusMessage = "Connected"
-            updateAutoRefresh();
             socket.send(JSON.stringify([{type:"getPorts"},{type:"getSerial"}]))
         }
         
@@ -99,17 +88,14 @@
 <div class="fields socket">
     <h2 class="header">Websocket</h2>
     <div class="field" id="adress" data-field-name="Adress">
-        ws://<input type="text" bind:value={host}>:<input type="number" bind:value={port}>/
+        ws://<input type="text" bind:value={$host}>:<input type="number" bind:value={$port}>/
     </div>
     <div class="field connection-state" id="websocket-state" data-field-name="Status">{statusMessage}</div>
     <div class="field websocket-btn" id="websocket-connect-btn" data-field-name="Connect Websocket">
         <button on:click={connect}>{connected ? "Disconnect" : "Connect"}</button>
     </div>
-    <div class="field refreshrate" id="refreshrate" data-field-name="Refresh Rate (HZ)">
-        <input type="number" bind:value={refreshrate} on:change={updateAutoRefresh}>
-    </div>
     <div class="field autorefresh" id="autorefresh" data-field-name="Auto Refresh">
-        <Switch bind:value={autorefresh} onChange={updateAutoRefresh}/>
+        <Switch bind:value={autorefresh} onChange={()=>{}}/>
     </div>
     
     <div id="output"></div>

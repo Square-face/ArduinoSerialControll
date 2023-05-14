@@ -1,3 +1,4 @@
+
 /**Get the sum of all numbers in a list
  * 
  * Takes an array of numbers and returns the sum
@@ -18,6 +19,8 @@ function sum(numbers: number[]): number {
     return total;
 }
 
+
+
 /**Average of a list of numbers
  * 
  * Takes an array of numbers and returns the average
@@ -31,7 +34,27 @@ function average(numbers: number[]): number {
     return sum(numbers) / numbers.length;
 }
 
+
+
+/**Maps a value from one range to another
+ * 
+ * Takes a input value and input range and returns a output relative to how the input value is mapped to the input range
+ * 
+ * @param inMin Minimum input value
+ * @param inMax Maximum input value
+ * @param value Input value to be mapped
+ * @param outMin Minimum output value
+ * @param outMax Maximum output value
+ * @returns Output value mapped relative to the input value
+ */
+function map(inMin: number, inMax: number, value: number, outMin: number, outMax: number): number {
+    return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+}
+
+
+
 export {
     average,
-    sum
+    sum,
+    map
 }
