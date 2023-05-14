@@ -1,27 +1,29 @@
 <script lang="ts">
-    export let index: number
+    /**Handle servo interactions
+     * 
+     * Stores the current angle and enable state of the servo.
+     * Manages how the servo handles keybind inputs
+    */
 
+    // dependencies
     import { state, keybinds, type servo, type, targetType } from '../stores'
-    import Switch from '../Components/Switch.svelte';
+    import { average } from '../../scripts/Numbers'
+    import Switch from '../Components/Switch.svelte'
 
-    const avg = (numbers: number[]) => {
-        var total = 0;
-        for(var i = 0; i < numbers.length; i++) {
-            total += numbers[i];
-        }
-        return total / numbers.length;
-    }
-
-    let servo: servo;
+    export let index: number
+    // get servo from global servo array
+    let servo: servo = $state.servos[index]
+    
     let keybindPositions:number[] = []
     let keybindEnabled:boolean[] = []
-    state.subscribe(state => servo=state.servos[index])
+
     keybinds.subscribe(keybinds => {
+        // reset stored keybinds
         keybindPositions = []
         keybindEnabled = []
+        
         keybinds.keyboard.forEach((keybind, _, __)=>{
             keybind.targets.forEach(target => {
-                // body
                 if (target.type != type.Servo){return}
                 if (target.index != index) {return}
                 switch(target.targetType) {
@@ -34,7 +36,7 @@
 
         })
         if (keybindPositions.length > 0){
-            servo.position = avg(keybindPositions)
+            servo.position = average(keybindPositions)
         }
     })
 

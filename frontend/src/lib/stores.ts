@@ -30,9 +30,9 @@ function createState() {
         ],
         servos: [
             {position: 0, manualPosition: 0, enabled: false, manualEnabled: false},
-            {position: 0, enabled: false},
-            {position: 0, enabled: false},
-            {position: 0, enabled: false},
+            {position: 0, manualPosition: 0, enabled: false, manualEnabled: false},
+            {position: 0, manualPosition: 0, enabled: false, manualEnabled: false},
+            {position: 0, manualPosition: 0, enabled: false, manualEnabled: false},
         ],
         steppers: [
             {position: 0, enabled: false},
@@ -194,6 +194,15 @@ function createKeybinds() {
 
     return {
         subscribe: subscribe,
+        getNextId: ()=> {
+            let testId = 0;
+            for (let i = 0; i<$keybinds.keyboard.length; i++) {
+                let keybind = $keybinds.keyboard[i]
+                if (keybind.id == testId) {
+                    testId++
+                }
+            }
+        },
         pressKey: (key: string) => {
             // when a key is pressed, set the asosciated keybind to active
 
