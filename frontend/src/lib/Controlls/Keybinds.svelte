@@ -3,65 +3,21 @@
 
 
     import { state, keybinds, type, targetType } from "../stores"
+    import CreateKeybind from "../Components/CreateKeyboardKeybind.svelte";
 
+    let creatingKeybind = false;
 
-    keybinds.addAnalogKeybind({
-        id: 0,
-        axis: 1,
-        gamepad: 0,
-        value: 0,
-        targets: [{
-            type: type.Motor,
-            targetType: targetType.speed,
-            index: 0,
-            absolute: true,
-            inverted: true,
-            inMin: -1,
-            inMax: 1,
-            outMin: -255,
-            outMax: 255,
-        },{
-            type: type.Motor,
-            targetType: targetType.speed,
-            index: 1,
-            absolute: true,
-            inverted: false,
-            inMin: -1,
-            inMax: 1,
-            outMin: -255,
-            outMax: 255,
-        }]
-    })
-    keybinds.addAnalogKeybind({
-        id: 0,
-        axis: 0,
-        gamepad: 0,
-        value: 0,
-        targets: [{
-            type: type.Motor,
-            targetType: targetType.speed,
-            index: 0,
-            absolute: true,
-            inverted: true,
-            inMin: -1,
-            inMax: 1,
-            outMin: -255,
-            outMax: 255,
-        },{
-            type: type.Motor,
-            targetType: targetType.speed,
-            index: 1,
-            absolute: true,
-            inverted: true,
-            inMin: -1,
-            inMax: 1,
-            outMin: -255,
-            outMax: 255,
-        }]
-    })
+    const keyUp = (code: string) => {
+        if (creatingKeybind) {return}
+        keybinds.unpressKey(code)
+    }
+    const keyDown = (code: string) => {
+        if (creatingKeybind) {return}
+        keybinds.pressKey(code)
+    }
 
-    document.addEventListener('keydown', event => {keybinds.pressKey(event.code)})
-    document.addEventListener('keyup', event => {keybinds.unpressKey(event.code)})
+    document.addEventListener('keydown', event => {keyDown(event.code)})
+    document.addEventListener('keyup', event => {keyUp(event.code)})
 
 </script>
 
@@ -87,5 +43,5 @@
         </div>
     </div>
     {/each}
-    <button>Create new</button>
+    <CreateKeybind bind:creatingKeybind/>
 </div>
