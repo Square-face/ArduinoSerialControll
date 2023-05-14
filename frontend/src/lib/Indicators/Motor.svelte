@@ -6,7 +6,7 @@
     */
     
     // dependencies
-    import { state, type motor } from '../stores'
+    import { state, type motor } from '../stores/devices'
     
     // get this motor from global motor array
     export let index: number

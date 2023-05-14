@@ -1,6 +1,6 @@
 <script lang="ts">
 
-    import { state } from '../stores'
+    import { state } from '../stores/devices'
 
     
     var gas: number = ($state.motors[0].speed+$state.motors[1].speed); // (L+R)/2

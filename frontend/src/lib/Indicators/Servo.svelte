@@ -6,7 +6,7 @@
     */
 
     // dependencies
-    import { state, type servo } from '../stores'
+    import { state, type servo } from '../stores/devices'
     import Switch from '../Components/Switch.svelte'
 
     // get servo from global servo array

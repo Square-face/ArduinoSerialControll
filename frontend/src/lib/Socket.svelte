@@ -6,7 +6,8 @@
     */
 
     // dependencies
-    import { state, ports, serial, host, port } from './stores'
+    import { state } from './stores/devices'
+    import { ports, serial, host, port } from './stores/connection'
     import Switch from './Components/Switch.svelte';
 
     let autorefresh = false

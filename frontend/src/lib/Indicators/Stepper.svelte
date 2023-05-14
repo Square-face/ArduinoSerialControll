@@ -6,7 +6,7 @@
     */
 
     // dependencies
-    import { state, type stepper } from '../stores'
+    import { state, type stepper } from '../stores/devices'
     import Switch from '../Components/Switch.svelte';
 
     // get current stepper from global stepper array

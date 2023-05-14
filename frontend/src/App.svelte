@@ -1,27 +1,35 @@
 <script lang="ts">
-  import svelteLogo from './assets/svelte.svg'
-  import viteLogo from '/vite.svg'
+  // connections
   import Socket from './lib/Socket.svelte';
   import Serial from './lib/Serial.svelte';
+  import Gamepads from './lib/Controls/Gamepads.svelte';
+
+  // devices
   import Motor from './lib/Indicators/Motor.svelte'
   import Servo from './lib/Indicators/Servo.svelte';
   import Stepper from './lib/Indicators/Stepper.svelte';
-  import Driving from './lib/Controlls/Driving.svelte';
+  
+  // controlling
+  import Driving from './lib/Controls/Driving.svelte';
 </script>
 
-<main class="serial-controll">
+<main class="serial-control">
+  <h1>Arduino Serial Controller</h1>
 
-  <div class="settings">
-    <Socket/>
-    <Serial/>
-  </div>
+  <div class="content">
 
-  <div class="controlls">
-    <Driving/>
-  </div>
-
-  <div class="visualization">
+    <div class="connections">
+      <Socket/>
+      <Serial/>
+      <Gamepads/>
+    </div>
     
+    <div class="controls">
+      <Driving/>
+    </div>
+    
+    <div class="visualization">
+      
       <div class="motors">
         <Motor index={0}/>
         <Motor index={1}/>
@@ -35,17 +43,22 @@
       <div class="steppers">
         <Stepper index={0}/>
       </div>
-
+      
+    </div>
   </div>
 
 </main>
 
 <style lang="scss">
-  main.serial-controll {
+  main.serial-control {
     display: flex;
-    flex-direction: row;
-    div.settings {
-      width: 250px;
+    flex-direction: column;
+    div.content{
+      display: grid;
+      grid-template-columns: 30% 45% 25%;
+      div.settings {
+        width: 250px;
+      }
     }
   }
 </style>

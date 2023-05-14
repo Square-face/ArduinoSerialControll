@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ports, serial } from './stores'
+    import { ports, serial } from './stores/connection'
     import Switch from './Components/Switch.svelte';
 
     let open: boolean = false;
