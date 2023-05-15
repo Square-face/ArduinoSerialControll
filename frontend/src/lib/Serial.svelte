@@ -52,7 +52,7 @@
         </select>
     </div>
     <div class="field State" id="serial-state" data-field-name="State">
-        <Switch bind:value={open} onChange={update}/>
+        {open ? "Open" : "Closed"}<Switch bind:value={open} onChange={update}/>
     </div>
 </div>
 
