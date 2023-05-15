@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Messages from './lib/Components/messages.svelte';
+  
   // connections
   import Socket from './lib/Socket.svelte';
   import Serial from './lib/Serial.svelte';
@@ -46,6 +48,7 @@
       
     </div>
   </div>
+  <Messages/>
 
 </main>
 

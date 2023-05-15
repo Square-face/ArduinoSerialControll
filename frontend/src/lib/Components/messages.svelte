@@ -7,7 +7,21 @@
 <div class="messages">
     {#each $messages as message, index}
     {#if !message.showed}
-    <Message bind:message={$messages[index]}/>
+    <Message {index}/>
     {/if}
     {/each}
 </div>
+
+<style>
+    div.messages {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3em;
+    }
+</style>

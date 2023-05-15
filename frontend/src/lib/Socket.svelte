@@ -8,6 +8,7 @@
     // dependencies
     import { state } from './stores/devices'
     import { ports, serial, host, port } from './stores/connection'
+    import { messages, importance } from './stores/messages'
     import Switch from './Components/Switch.svelte';
 
     let autorefresh = false
@@ -44,7 +45,7 @@
         }
         
         socket.onclose = () => {
-            console.log("closed")
+            messages.createMessage("Socket closed", "Websocket connection closed", 6.0, importance.ERROR)
             connected = false
             statusMessage = "Closed"
         }
