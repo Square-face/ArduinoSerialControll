@@ -13,6 +13,9 @@
   
   // controlling
   import Driving from './lib/Controls/Driving.svelte';
+
+  // bindings
+  import Bindings from './lib/Bindings/Bindings.svelte'
 </script>
 
 <main class="serial-control">
@@ -28,6 +31,7 @@
     
     <div class="controls">
       <Driving/>
+      <Bindings/>
     </div>
     
     <div class="visualization">
@@ -58,7 +62,7 @@
     flex-direction: column;
     div.content{
       display: grid;
-      grid-template-columns: 30% 45% 25%;
+      grid-template-columns: 35% 40% 25%;
       div.settings {
         width: 250px;
       }

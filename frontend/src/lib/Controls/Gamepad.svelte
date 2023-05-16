@@ -1,8 +1,9 @@
 <script lang="ts">
     import AnalogField from "../Components/AnalogField.svelte";
-import DigitalField from "../Components/DigitalField.svelte";
+    import DigitalField from "../Components/DigitalField.svelte";
 
     export let gamepad: Gamepad;
+
 </script>
 
 <div class="gamepad">
@@ -16,13 +17,16 @@ import DigitalField from "../Components/DigitalField.svelte";
     <h4>Axes</h4>
     <div class="analog-axes">
         {#each gamepad.axes as axis, index}
-            <AnalogField {index} bind:value={axis}/>
+            <AnalogField {index} {gamepad}/>
         {/each}
     </div>
 </div>
 
 <style lang="scss">
     div.gamepad {
+        background-color: rgba(255,255,255,0.1);
+        padding: 0.5em;
+        border-radius: 0.5em;
         div.digital-buttons{
             display: flex;
             flex-direction: row;

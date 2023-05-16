@@ -45,5 +45,8 @@
         &.info {
             background-color: rgba(44, 201, 23, 0.881);
         }
+        &.warning {
+            background-color: rgba(201, 150, 23, 0.881);
+        }
     }
 </style>
