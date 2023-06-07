@@ -6,12 +6,12 @@
     */
 
     // dependencies
-    import { state, type servo } from '../stores/devices'
+    import { state, type Servo } from '../stores/devices'
     import Switch from '../Components/Switch.svelte'
 
     // get servo from global servo array
     export let index: number
-    let servo: servo = $state.servos[index]
+    let servo: Servo = $state.servos[index]
 
     // update state store with new servo values
     const update = () => {

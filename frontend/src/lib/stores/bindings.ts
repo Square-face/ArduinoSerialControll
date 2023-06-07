@@ -9,7 +9,7 @@ export interface DigitalTarget {
     index: number,      // the index for this target
     toggle: boolean,    // if the keybind should behave as a toggle
     inverted: boolean   // if the logical input should be inverted
-    value: number | boolean // the target value or boolean
+    value: number | null // the target value or null if the selected field is requires a boolean
 }
 
 export interface Keybind {
@@ -57,7 +57,7 @@ function createKeybinds() {
          * @param inverted If the logical input should be inverted
          * @param value the value to be applied to the field of the device
          */
-        addTarget(keybindIndex:number, device: Device, field: Field, index: number, toggle:boolean, inverted:boolean, value: number | boolean) {
+        addTarget(keybindIndex:number, device: Device, field: Field, index: number, toggle:boolean = false, inverted:boolean = false, value: number | null = null) {
             // validate field and device
             if (device == Device.Motor && field != Field.speed) {throw new Error("Field does not exist on device")}
             if (device != Device.Motor && field == Field.speed) {throw new Error("Field does not exist on device")}

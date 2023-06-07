@@ -10,8 +10,8 @@
     <div class="analog"></div>
     <div class="digital"></div>
     <div class="keyboard">
-        {#each $keybinds as keybind}
-            <Keybind bind:keybind/>
+        {#each $keybinds as keybind, index}
+            <Keybind {index}/>
         {/each}
         <CreateKeybind/>
     </div>

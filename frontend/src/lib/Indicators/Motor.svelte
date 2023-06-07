@@ -6,11 +6,11 @@
     */
     
     // dependencies
-    import { state, type motor } from '../stores/devices'
+    import { state, type Motor } from '../stores/devices'
     
     // get this motor from global motor array
     export let index: number
-    var motor: motor = $state.motors[index];
+    var motor: Motor = $state.motors[index];
 
 
     // update global state with new motor values

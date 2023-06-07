@@ -1,36 +1,46 @@
-import { writable } from "svelte/store";
+import { writable, type Writable } from "svelte/store";
 
-export interface motor {
+export interface Entry {
+    keybindIndex: number
+    targetIndex: number
+    value: number | boolean
+}
+
+export interface Motor {
     speed: number,
+    entries: Entry[],
 }
-export interface servo {
+export interface Servo {
     position: number,
     enabled: boolean,
+    entries: Entry[],
 }
-export interface stepper {
+export interface Stepper {
     position: number,
     enabled: boolean,
+    entries: Entry[],
 }
 export interface State {
-    motors: motor[]
-    servos: servo[]
-    steppers: stepper[]
+    motors: Motor[]
+    servos: Servo[]
+    steppers: Stepper[]
 }
 
 function createState() {
-    const { subscribe, set, update } = writable({
+
+    const { subscribe, set, update }: Writable<State> = writable({
         motors: [
-            {speed: 0},
-            {speed: 0},
+            {speed: 0, entries: []},
+            {speed: 0, entries: []},
         ],
         servos: [
-            {position: 0, enabled: false},
-            {position: 0, enabled: false},
-            {position: 0, enabled: false},
-            {position: 0, enabled: false},
+            {position: 0, enabled: false, entries: []},
+            {position: 0, enabled: false, entries: []},
+            {position: 0, enabled: false, entries: []},
+            {position: 0, enabled: false, entries: []},
         ],
         steppers: [
-            {position: 0, enabled: false},
+            {position: 0, enabled: false, entries: []},
         ],
     })
 
@@ -38,9 +48,9 @@ function createState() {
         subscribe,
         set,
         update,
-        updateServo:    (index: number, servo: servo)       => update(state => {state.servos[index]     = servo;    return state}),
-        updateStepper:  (index: number, stepper: stepper)   => update(state => {state.steppers[index]   = stepper;  return state}),
-        updateMotor:    (index: number, motor: motor)       => update(state => {state.motors[index]     = motor;    return state}),
+        updateServo:    (index: number, servo: Servo)       => update(state => {state.servos[index]     = servo;    return state}),
+        updateStepper:  (index: number, stepper: Stepper)   => update(state => {state.steppers[index]   = stepper;  return state}),
+        updateMotor:    (index: number, motor: Motor)       => update(state => {state.motors[index]     = motor;    return state}),
     }
 }
 

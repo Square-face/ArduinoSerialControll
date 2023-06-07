@@ -6,12 +6,12 @@
     */
 
     // dependencies
-    import { state, type stepper } from '../stores/devices'
+    import { state, type Stepper } from '../stores/devices'
     import Switch from '../Components/Switch.svelte';
 
     // get current stepper from global stepper array
     export let index: number
-    var stepper: stepper = $state.steppers[index];
+    var stepper: Stepper = $state.steppers[index];
 
     // update state with new stepper values
     const update = () => {
